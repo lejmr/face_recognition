@@ -1,10 +1,11 @@
-from os import listdir, remove
+from os import listdir, remove, unlink
 from os.path import isfile, join, splitext
 
 import face_recognition
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.exceptions import BadRequest
+import tempfile
 
 # Global storage for images
 faces_dict = {}
@@ -134,13 +135,40 @@ def web_faces():
 
     return jsonify(list(faces_dict.keys()))
 
+@app.route('/compare', methods=['POST'])
+def compare_two_faces():
 
-def extract_image(request):
+    # Import files from POST
+    file1 = extract_image(request, "file1")
+    file2 = extract_image(request, "file2")
+    temp1 = tempfile.mktemp()
+    temp2 = tempfile.mktemp()
+    file1.save(temp1)
+    file2.save(temp2)
+
+    # Load them into face_recognition
+    image1 = face_recognition.load_image_file(temp1)
+    image2 = face_recognition.load_image_file(temp2)
+    encoding1 = face_recognition.face_encodings(image1)[0]
+    encoding2 = face_recognition.face_encodings(image2)[0]
+
+    # Compare
+    distance = face_recognition.face_distance([encoding1], encoding2)
+    ret = {"distance": distance[0]}
+    
+    # Clear temp files
+    unlink(temp1)
+    unlink(temp2)
+
+    # Return face distance
+    return jsonify(ret)
+
+def extract_image(request, name='file'):
     # Check if a valid image file was uploaded
-    if 'file' not in request.files:
-        raise BadRequest("Missing file parameter!")
+    if name not in request.files:
+        raise BadRequest("Missing {} parameter!".format(name))
 
-    file = request.files['file']
+    file = request.files[name]
     if file.filename == '':
         raise BadRequest("Given file is invalid")
 

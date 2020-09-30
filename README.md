@@ -39,6 +39,11 @@ Simple `GET` the `/register` endpoint.
 Simple `POST` an image-file to the web service.
 `curl -X POST -F "file=@person1.jpg" http://localhost:8080/`
 
+### Compare two faces
+
+Simple `POST` an image-file to the web service.
+`curl -X POST -F "file1=@person1.jpg" -F "file1=@person2.jpg" http://localhost:8080/compare`
+
 ## Examples
 
 In the `examples`-directory there is currently only one example that shows how to use the Raspberry Pi-Camera module to capture an image and `POST` it to the `Face Recognition - Docker image` to check for known faces.
