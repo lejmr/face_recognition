@@ -113,7 +113,12 @@ def web_faces():
     if request.method == 'GET':
         return jsonify(list(faces_dict.keys()))
 
-    # POST/DELETE
+    if request.method == 'DELETE':
+        faces_dict.pop(request.args.get('id'))
+        # remove("{0}/{1}.jpg".format(persistent_faces, request.args.get('id')))
+        return jsonify({"status": "ok"})
+
+    # POST
     file = extract_image(request)
     if 'id' not in request.args:
         raise BadRequest("Identifier for the face was not given!")
@@ -128,10 +133,6 @@ def web_faces():
             faces_dict.update({request.args.get('id'): new_encoding})
         except Exception as exception:
             raise BadRequest(exception)
-
-    elif request.method == 'DELETE':
-        faces_dict.pop(request.args.get('id'))
-        remove("{0}/{1}.jpg".format(persistent_faces, request.args.get('id')))
 
     return jsonify(list(faces_dict.keys()))
 

@@ -53,5 +53,5 @@ COPY facerec_service.py /root/facerec_service.py
 
 
 # Start the web service
-CMD cd /root/ && \
-    python3 facerec_service.py
+WORKDIR /root
+CMD ["python3", "facerec_service.py"]
