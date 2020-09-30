@@ -47,6 +47,8 @@ RUN cd ~ && \
     pip3 install -r requirements.txt && \
     python3 setup.py install
 
+RUN mkdir /root/faces
+
 
 # Copy web service script
 COPY facerec_service.py /root/facerec_service.py
