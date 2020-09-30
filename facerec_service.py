@@ -49,9 +49,14 @@ def calc_face_encoding(image):
 
 def get_faces_dict(path):
     image_files = get_all_picture_files(path)
-    return dict([(remove_file_ext(image), calc_face_encoding(image))
-        for image in image_files])
-
+    _tmp = {}
+    for image in image_files:
+        try:
+            _tmp[remove_file_ext(image)] = calc_face_encoding(image)
+            print("Image {} loaded.".format(image))
+        except:
+            pass
+    return _tmp
 
 def detect_faces_in_image(file_stream):
     # Load the uploaded image file
