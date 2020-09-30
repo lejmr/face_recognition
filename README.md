@@ -41,9 +41,14 @@ docker run -d -p8080:8080 -vfaces:/root/faces facerec_service
 Simple `POST` an image-file to the `/faces` endpoint and provide an identifier.
 `curl -X POST -F "file=@person1.jpg" http://localhost:8080/faces?id=person1`
 
+### Remove from known faces
+
+Simple `DELETE` an image-file to the `/faces` endpoint
+`curl -X DELETE http://localhost:8080/faces?id=person1`
+
 ### Read registered faces
 
-Simple `GET` the `/register` endpoint.
+Simple `GET` the `/fa` endpoint.
 `curl http://localhost:8080/faces`
 
 ### Identify faces on image
